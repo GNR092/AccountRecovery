@@ -1,12 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using MySql.Data.MySqlClient;
 using Terraria;
 using TerrariaApi.Server;
 using TShockAPI;
 using TShockAPI.DB;
-
 
 namespace AccountRecovery
 {
@@ -32,6 +31,8 @@ namespace AccountRecovery
 
         public static ConfigFile AccountRecoveryConfig { get; set; }
 
+        public static Dictionary<int, DateTime> CommandCooldown = new Dictionary<int, DateTime>();
+
         public AccountRecovery(Main game) : base(game)
         {
             AccountRecoveryConfig = new ConfigFile();
@@ -48,7 +49,11 @@ namespace AccountRecovery
 
         private void OnInitialize(EventArgs args)
         {
-            TShock.DB.Query("CREATE TABLE IF NOT EXISTS `Emails`(`ID` INT, `Email` TEXT, PRIMARY KEY(`ID`), FOREIGN KEY(`ID`) REFERENCES `Users`(`ID`) ON UPDATE CASCADE ON DELETE CASCADE)");
+            if(TShock.DB.GetSqlType() == SqlType.Sqlite)
+                TShock.DB.Query("CREATE TABLE IF NOT EXISTS Emails (ID INTEGER PRIMARY KEY AUTOINCREMENT REFERENCES Users(ID) ON UPDATE CASCADE ON DELETE CASCADE, Email TEXT)");
+            else
+                TShock.DB.Query("CREATE TABLE IF NOT EXISTS Emails (ID INTEGER PRIMARY KEY AUTO_INCREMENT REFERENCES Users(ID) ON UPDATE CASCADE ON DELETE CASCADE, Email TEXT)");
+
             /*SqlTableCreator sqlcreator = new SqlTableCreator(TShock.DB,
             TShock.DB.GetSqlType() == SqlType.Sqlite ? (IQueryBuilder)new SqliteQueryCreator() : new MysqlQueryCreator());
             sqlcreator.EnsureTableStructure(new SqlTable("Emails",
@@ -57,7 +62,7 @@ namespace AccountRecovery
             ));*/
 
             #region Commands
-            Action<Command> Add = c =>
+            Action <Command> Add = c =>
             {
                 TShockAPI.Commands.ChatCommands.RemoveAll(c2 => c2.Names.Select(s => s.ToLowerInvariant()).Intersect(c.Names.Select(s => s.ToLowerInvariant())).Any());
                 TShockAPI.Commands.ChatCommands.Add(c);
@@ -69,7 +74,7 @@ namespace AccountRecovery
                 HelpText = "Allows a user to change his email or add an email."
             });
 
-            Add(new Command(Permissions.canchat, Commands.RecoverPassword, "recover")
+            Add(new Command(Permissions.canlogin, Commands.RecoverPassword, "recover")
             {
                 AllowServer = true,
                 HelpText = "Allows a user to request a new password."
