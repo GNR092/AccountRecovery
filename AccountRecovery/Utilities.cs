@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Net.Mail;
-using MySql.Data.MySqlClient;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using TShockAPI;
 using TShockAPI.DB;
 
@@ -41,7 +37,7 @@ namespace AccountRecovery
             mail.Body = AccountRecovery.AccountRecoveryConfig.EmailBodyLine;
             mail.IsBodyHtml = false;
 
-            string passwordGenerated = GeneratePassword(6);
+            string passwordGenerated = GeneratePassword(AccountRecovery.AccountRecoveryConfig.GeneratedPasswordLength);
             TShock.Users.SetUserPassword(player.User, passwordGenerated);
             TShock.Log.ConsoleInfo("{0} has requested a new password succesfully.", player.User.Name);
             mail.Body = string.Format(AccountRecovery.AccountRecoveryConfig.EmailBodyLine.Replace("$NEW_PASSWORD", passwordGenerated), passwordGenerated);
@@ -74,7 +70,7 @@ namespace AccountRecovery
         {
             try
             {
-                using (var reader = TShock.DB.QueryReader("SELECT * FROM Emails WHERE Account != @0 Email = @1", accountID, email))
+                using (var reader = TShock.DB.QueryReader("SELECT * FROM Emails WHERE ID != @0 AND Email = @1", accountID, email))
                 {
                     if (reader.Read())
                     {
