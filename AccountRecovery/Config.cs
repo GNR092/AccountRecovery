@@ -15,9 +15,10 @@ namespace AccountRecovery
         public string ServerEmailPassword = "password";
         public string HostSMTPServer = "smtp.gmail.com";
         public int HostPort = 587;
-        public string EmailFrom = "noreply@recovery.com";
+        public string EmailFrom = "noreply@gmail.com";
         public string EmailSubjectLine = "Password Recovery";
-        public string EmailBodyLine = "YOUR SERVER NAME Password Recovery\n You have requested a new password. We have successfully generated a new password for your account. \n\nYour new password: $NEW_PASSWORD";
+        public string EmailBodyLine = "YOUR SERVER NAME Password Recovery\nYou have requested a new password. We have successfully generated a new password for your account.\n\nYour new password: $NEW_PASSWORD";
+        public int GeneratedPasswordLength = 6;
 
         public static ConfigFile Read(string path)
         {
