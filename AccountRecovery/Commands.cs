@@ -1,5 +1,7 @@
-﻿using TShockAPI;
+﻿using System;
+using TShockAPI;
 using TShockAPI.DB;
+
 
 namespace AccountRecovery
 {
@@ -13,15 +15,16 @@ namespace AccountRecovery
                 return;
             }
             string email = args.Parameters[0];
-            if (Utilities.IsValidEmail(email))
+            if (Utilities.IsEmailInUse(args.Player.User.ID, email) > 0)
+            {
+                args.Player.SendErrorMessage("The email is already in use by another account.");
+                return;
+            }
+            else if(Utilities.IsValidEmail(email))
             {
                 Utilities.AddEmail(args.Player.User.ID, email);
                 args.Player.SendSuccessMessage("Your email has been updated successfully.");
                 TShock.Log.ConsoleInfo("{0} has updated their email succesfully.", args.Player.User.Name);
-            }
-            else if(Utilities.IsEmailInUse(args.Player.User.ID, email) > 0)
-            {
-                args.Player.SendErrorMessage("The email is already in use by anouther account.");
             }
             else
                 args.Player.SendErrorMessage("Invalid e-mail address.");
@@ -32,6 +35,12 @@ namespace AccountRecovery
             if (args.Parameters.Count != 2)
             {
                 args.Player.SendErrorMessage("Invalid syntax! Proper syntax: /recover <account> <email>");
+                return;
+            }
+            var iCD = AccountRecovery.CommandCooldown;
+            if (iCD.ContainsKey(args.Player.Index) && iCD[args.Player.Index] > DateTime.UtcNow)
+            {
+                args.Player.SendErrorMessage("You must wait {0} minute(s) before sending again.", (int)(iCD[args.Player.Index] - DateTime.UtcNow).TotalMinutes);
                 return;
             }
             User user = TShock.Users.GetUserByName(args.Parameters[0]);
@@ -46,6 +55,7 @@ namespace AccountRecovery
                 if (Utilities.GetEmailByID(args.Player.User.ID) == args.Parameters[1])
                 {
                     Utilities.SendEmail(args.Parameters[1], args.Player);
+                    iCD.Add(args.Player.Index, DateTime.UtcNow.AddMinutes(5));
                 }
                 else
                     args.Player.SendErrorMessage("The account/email does not match our records.");
