@@ -9,7 +9,7 @@ using TShockAPI.DB;
 
 namespace AccountRecovery
 {
-    [ApiVersion(1, 23)]
+    [ApiVersion(1, 24)]
     public class AccountRecovery : TerrariaPlugin
     {
         public override Version Version
