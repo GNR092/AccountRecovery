@@ -9,7 +9,7 @@ using TShockAPI.DB;
 
 namespace AccountRecovery
 {
-    [ApiVersion(1, 22)]
+    [ApiVersion(1, 23)]
     public class AccountRecovery : TerrariaPlugin
     {
         public override Version Version
@@ -68,13 +68,13 @@ namespace AccountRecovery
                 TShockAPI.Commands.ChatCommands.Add(c);
             };
 
-            Add(new Command(Permissions.canchangepassword, Commands.EmailUser, "email")
+            Add(new Command(Permissions.addemail, Commands.EmailUser, "email")
             {
                 AllowServer = true,
                 HelpText = "Allows a user to change his email or add an email."
             });
 
-            Add(new Command(Permissions.canlogin, Commands.RecoverPassword, "recover")
+            Add(new Command(Permissions.recoveraccount, Commands.RecoverPassword, "recover")
             {
                 AllowServer = true,
                 HelpText = "Allows a user to request a new password."

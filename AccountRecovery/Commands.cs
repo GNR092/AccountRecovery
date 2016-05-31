@@ -38,7 +38,7 @@ namespace AccountRecovery
                 return;
             }
             var iCD = AccountRecovery.CommandCooldown;
-            if (iCD.ContainsKey(args.Player.Index) && iCD[args.Player.Index] > DateTime.UtcNow)
+            if (iCD != null && iCD.ContainsKey(args.Player.Index) && iCD[args.Player.Index] > DateTime.UtcNow)
             {
                 args.Player.SendErrorMessage("You must wait {0} minute(s) before sending again.", (int)(iCD[args.Player.Index] - DateTime.UtcNow).TotalMinutes);
                 return;
