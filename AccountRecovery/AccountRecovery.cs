@@ -9,7 +9,7 @@ using TShockAPI.DB;
 
 namespace AccountRecovery
 {
-    [ApiVersion(1, 24)]
+    [ApiVersion(1, 23)]
     public class AccountRecovery : TerrariaPlugin
     {
         public override Version Version
@@ -26,7 +26,7 @@ namespace AccountRecovery
         }
         public override string Description
         {
-            get { return "Allow recovery of passwords via email."; }
+            get { return "Users can add emails, and recovery account passwords."; }
         }
 
         public static ConfigFile AccountRecoveryConfig { get; set; }
