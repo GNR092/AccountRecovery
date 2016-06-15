@@ -2,4 +2,3 @@ C:\Users\Marcus101RR\Desktop\TShock\AccountRecovery\AccountRecovery\bin\Release\
 C:\Users\Marcus101RR\Desktop\TShock\AccountRecovery\AccountRecovery\bin\Release\AccountRecovery.pdb
 C:\Users\Marcus101RR\Desktop\TShock\AccountRecovery\AccountRecovery\obj\Release\AccountRecovery.dll
 C:\Users\Marcus101RR\Desktop\TShock\AccountRecovery\AccountRecovery\obj\Release\AccountRecovery.pdb
-C:\Users\Marcus101RR\Desktop\TShock\AccountRecovery\AccountRecovery\obj\Release\AccountRecovery.csprojResolveAssemblyReference.cache
