@@ -23,24 +23,24 @@ namespace AccountRecovery
 
         public static void SendEmail(string email, TSPlayer player)
         {
-            MailMessage mail = new MailMessage(AccountRecovery.AccountRecoveryConfig.EmailFrom, email);
+            MailMessage mail = new MailMessage(AccountRecovery.Config.EmailFrom, email);
             SmtpClient client = new SmtpClient();
             client.Timeout = 15000;
-            client.Host = AccountRecovery.AccountRecoveryConfig.HostSMTPServer;
-            client.Port = AccountRecovery.AccountRecoveryConfig.HostPort;
+            client.Host = AccountRecovery.Config.HostSMTPServer;
+            client.Port = AccountRecovery.Config.HostPort;
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.UseDefaultCredentials = false;
-            client.Credentials = new System.Net.NetworkCredential(AccountRecovery.AccountRecoveryConfig.ServerEmailAddress, AccountRecovery.AccountRecoveryConfig.ServerEmailPassword);
+            client.Credentials = new System.Net.NetworkCredential(AccountRecovery.Config.ServerEmailAddress, AccountRecovery.Config.ServerEmailPassword);
             client.EnableSsl = true;
             //client.ServicePoint.MaxIdleTime = 1;
-            mail.Subject = AccountRecovery.AccountRecoveryConfig.EmailSubjectLine;
-            mail.Body = AccountRecovery.AccountRecoveryConfig.EmailBodyLine;
+            mail.Subject = AccountRecovery.Config.EmailSubjectLine;
+            mail.Body = AccountRecovery.Config.EmailBodyLine;
             mail.IsBodyHtml = false;
 
-            string passwordGenerated = GeneratePassword(AccountRecovery.AccountRecoveryConfig.GeneratedPasswordLength);
+            string passwordGenerated = GeneratePassword(AccountRecovery.Config.GeneratedPasswordLength);
             TShock.Users.SetUserPassword(player.User, passwordGenerated);
             TShock.Log.ConsoleInfo("{0} has requested a new password succesfully.", player.User.Name);
-            mail.Body = string.Format(AccountRecovery.AccountRecoveryConfig.EmailBodyLine.Replace("$NEW_PASSWORD", passwordGenerated), passwordGenerated);
+            mail.Body = string.Format(AccountRecovery.Config.EmailBodyLine.Replace("$NEW_PASSWORD", passwordGenerated), passwordGenerated);
 
             client.Send(mail);
             client.Dispose();
