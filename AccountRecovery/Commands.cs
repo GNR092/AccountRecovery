@@ -49,10 +49,9 @@ namespace AccountRecovery
                 args.Player.SendErrorMessage("The account provided does not match our records.");
                 return;
             }
-
             if (Utilities.IsValidEmail(args.Parameters[1]))
             {
-                if (Utilities.GetEmailByID(args.Player.User.ID) == args.Parameters[1])
+                if (Utilities.GetEmailByID(user.ID) == args.Parameters[1])
                 {
                     Utilities.SendEmail(args.Parameters[1], args.Player);
                     iCD.Add(args.Player.Index, DateTime.UtcNow.AddMinutes(5));
