@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.IO;
 using Terraria;
 using TerrariaApi.Server;
 using TShockAPI;
 using TShockAPI.DB;
+using TShockAPI.Hooks;
 
 namespace AccountRecovery
 {
@@ -29,27 +31,40 @@ namespace AccountRecovery
             get { return "Users can add emails, and recovery account passwords."; }
         }
 
-        public static ConfigFile AccountRecoveryConfig { get; set; }
+        public static Config Config { get; set; }
 
         public static Dictionary<int, DateTime> CommandCooldown = new Dictionary<int, DateTime>();
 
         public AccountRecovery(Main game) : base(game)
         {
-            AccountRecoveryConfig = new ConfigFile();
             Order = 10;
         }
 
         public override void Initialize()
         {
-            ConfigFile.SetupConfig();
-
             ServerApi.Hooks.GameInitialize.Register(this, OnInitialize);
             GetDataHandlers.InitGetDataHandler();
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                ServerApi.Hooks.GameInitialize.Deregister(this, OnInitialize);
+            }
+            base.Dispose(disposing);
+        }
+
         private void OnInitialize(EventArgs args)
         {
-            if(TShock.DB.GetSqlType() == SqlType.Sqlite)
+            string path = Path.Combine(TShock.SavePath, "AccountRecovery.json");
+            Config = Config.Read(path);
+            if (!File.Exists(path))
+            {
+                Config.Write(path);
+            }
+
+            if (TShock.DB.GetSqlType() == SqlType.Sqlite)
                 TShock.DB.Query("CREATE TABLE IF NOT EXISTS Emails (ID INTEGER PRIMARY KEY AUTOINCREMENT REFERENCES Users(ID) ON UPDATE CASCADE ON DELETE CASCADE, Email TEXT)");
             else
                 TShock.DB.Query("CREATE TABLE IF NOT EXISTS Emails (ID INTEGER PRIMARY KEY AUTO_INCREMENT REFERENCES Users(ID) ON UPDATE CASCADE ON DELETE CASCADE, Email TEXT)");
@@ -82,13 +97,15 @@ namespace AccountRecovery
             #endregion
         }
 
-        protected override void Dispose(bool disposing)
+        public void OnReload(ReloadEventArgs args)
         {
-            if (disposing)
+            string path = Path.Combine(TShock.SavePath, "AccountRecovery.json");
+            Config = Config.Read(path);
+            if (!File.Exists(path))
             {
-                ServerApi.Hooks.GameInitialize.Deregister(this, OnInitialize);
+                Config.Write(path);
             }
-            base.Dispose(disposing);
+            args.Player.SendSuccessMessage("[Account Recovery] Reloaded configuration file and data!");
         }
     }
 }
