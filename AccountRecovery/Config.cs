@@ -1,11 +1,5 @@
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using Newtonsoft.Json;
-using TShockAPI;
 
 namespace AccountRecovery
 {
@@ -17,8 +11,9 @@ namespace AccountRecovery
         public int HostPort = 587;
         public string EmailFrom = "noreply@gmail.com";
         public string EmailSubjectLine = "Password Recovery";
-        public string EmailBodyLine = "YOUR SERVER NAME Password Recovery\nYou have requested a new password. We have successfully generated a new password for your account.\n\nYour new password: $NEW_PASSWORD";
+        public string EmailBodyLine = "YOUR SERVER NAME Password Recovery\n\nHello $USERNAME,\n\nYou have requested a new password from our server. We have successfully generated a new password for your account.\n\nYour new password: $NEW_PASSWORD";
         public int GeneratedPasswordLength = 6;
+        public bool UseHTML = false;
 
         public void Write(string path)
         {
