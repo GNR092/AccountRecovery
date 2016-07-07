@@ -2,7 +2,6 @@
 using TShockAPI;
 using TShockAPI.DB;
 
-
 namespace AccountRecovery
 {
     class Commands
@@ -53,7 +52,7 @@ namespace AccountRecovery
             {
                 if (Utilities.GetEmailByID(user.ID) == args.Parameters[1])
                 {
-                    Utilities.SendEmail(args.Parameters[1], args.Player);
+                    Utilities.SendEmail(args.Player, args.Parameters[1], user);
                     iCD.Add(args.Player.Index, DateTime.UtcNow.AddMinutes(5));
                 }
                 else
