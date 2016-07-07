@@ -21,7 +21,7 @@ namespace AccountRecovery
             }
         }
 
-        public static void SendEmail(string email, TSPlayer player)
+        public static void SendEmail(TSPlayer player, string email, User user)
         {
             MailMessage mail = new MailMessage(AccountRecovery.Config.EmailFrom, email);
             SmtpClient client = new SmtpClient();
@@ -35,12 +35,14 @@ namespace AccountRecovery
             //client.ServicePoint.MaxIdleTime = 1;
             mail.Subject = AccountRecovery.Config.EmailSubjectLine;
             mail.Body = AccountRecovery.Config.EmailBodyLine;
-            mail.IsBodyHtml = false;
+            mail.IsBodyHtml = AccountRecovery.Config.UseHTML;
 
             string passwordGenerated = GeneratePassword(AccountRecovery.Config.GeneratedPasswordLength);
-            TShock.Users.SetUserPassword(player.User, passwordGenerated);
-            TShock.Log.ConsoleInfo("{0} has requested a new password succesfully.", player.User.Name);
-            mail.Body = string.Format(AccountRecovery.Config.EmailBodyLine.Replace("$NEW_PASSWORD", passwordGenerated), passwordGenerated);
+            TShock.Users.SetUserPassword(user, passwordGenerated);
+            TShock.Log.ConsoleInfo("{0} has requested a new password succesfully.", user.Name);
+
+            mail.Body = string.Format(mail.Body.Replace("$NEW_PASSWORD", passwordGenerated));
+            mail.Body = string.Format(mail.Body.Replace("$USERNAME", user.Name));
 
             client.Send(mail);
             client.Dispose();
