@@ -56,6 +56,8 @@ namespace AccountRecovery
                     Utilities.SendEmail(args.Player, userEmail, user == args.Player.User ? args.Player.User : user);
                     iCD.Add(args.Player.Index, DateTime.UtcNow.AddMinutes(5));
                 }
+                else if(userEmail == null)
+                    args.Player.SendErrorMessage("The account does not have an email associated.");
                 else
                     args.Player.SendErrorMessage("The account/email does not match our records.");
             }
