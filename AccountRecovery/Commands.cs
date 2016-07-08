@@ -50,9 +50,10 @@ namespace AccountRecovery
             }
             if (Utilities.IsValidEmail(args.Parameters[1]))
             {
-                if (Utilities.GetEmailByID(user.ID) == args.Parameters[1])
+                string userEmail = Utilities.GetEmailByID(user.ID);
+                if (userEmail == args.Parameters[1])
                 {
-                    Utilities.SendEmail(args.Player, args.Parameters[1], user);
+                    Utilities.SendEmail(args.Player, userEmail, user == args.Player.User ? args.Player.User : user);
                     iCD.Add(args.Player.Index, DateTime.UtcNow.AddMinutes(5));
                 }
                 else
