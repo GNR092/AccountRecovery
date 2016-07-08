@@ -46,7 +46,8 @@ namespace AccountRecovery
 
             client.Send(mail);
             client.Dispose();
-            player.SendSuccessMessage("Your password has been sent to your email.");
+            player.SendSuccessMessage("A new password has been generated and sent to {0} for {1}.", email, user.Name);
+            TShock.Log.ConsoleInfo("A new password has been generated and sent to {0} for {1}.", email, user.Name);
         }
 
         public static string GetEmailByID(int accountID)
