@@ -54,6 +54,8 @@ namespace AccountRecovery
                 if (userEmail == args.Parameters[1])
                 {
                     Utilities.SendEmail(args.Player, userEmail, user == args.Player.User ? args.Player.User : user);
+                    if (iCD.ContainsKey(args.Player.Index))
+                        iCD.Remove(args.Player.Index);
                     iCD.Add(args.Player.Index, DateTime.UtcNow.AddMinutes(5));
                 }
                 else if(userEmail == null)
